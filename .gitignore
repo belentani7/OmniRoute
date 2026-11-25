@@ -1,12 +1,8 @@
-# Generated OS metadata, Python bytecode, and HTML reports
+node_modules/
+dist/
+coverage/
+*.log
 .DS_Store
-._*
-__MACOSX/
-Thumbs.db
-Desktop.ini
-desktop.ini
-__pycache__/
-*.pyc
-*.pyo
-htmlcov/
+.vite/
 playwright-report/
+test-results/
