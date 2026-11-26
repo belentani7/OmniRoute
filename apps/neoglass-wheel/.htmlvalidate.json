@@ -1,0 +1,19 @@
+{
+  "extends": ["html-validate:recommended", "html-validate:document"],
+  "rules": {
+    "doctype-style": "off",
+    "void-style": [
+      "error",
+      {
+        "style": "selfclosing"
+      }
+    ],
+    "no-inline-style": "off",
+    "attribute-boolean-style": "off",
+    "element-required-attributes": "error",
+    "wcag/h30": "error",
+    "wcag/h32": "error",
+    "wcag/h63": "error",
+    "require-sri": "off"
+  }
+}

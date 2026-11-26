@@ -1,0 +1,129 @@
+/* ============================================================================
+   NeoGlassRojo — capa óptica propia.
+
+   El lenguaje visual (rojo #ff0032, cristal frío, halo que sigue al puntero,
+   radio 18px) viene de la identidad NeoGlass de BELENTANI//OS. Esa identidad y
+   sus archivos están bajo AGPLv3; este repositorio es MIT. Por eso aquí NO hay
+   código copiado: se reimplementa el mismo lenguaje visual con CSS propio y se
+   acredita el origen en docs/PROCEDENCIA.md. Un color o un radio de blur son
+   datos de diseño; una hoja de estilos entera es una obra, y no se trasplanta.
+
+   Diferencias deliberadas frente al material de origen:
+   · Sin motor de animación propio ni bucle permanente de `requestAnimationFrame`.
+   · Sin tilt 3D en controles interactivos (desalinea el puntero y marea).
+   · Estado de foco dibujado con `outline`, no con `box-shadow`, para que el
+     indicador no desaparezca en modo de alto contraste.
+   · Todo el movimiento se anula con `prefers-reduced-motion`.
+   ========================================================================== */
+
+.ng-glass {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--ng-line);
+  border-radius: var(--ng-radius);
+  background:
+    radial-gradient(
+      var(--ng-halo, 160px) circle at var(--ng-mx, 50%) var(--ng-my, 50%),
+      var(--ng-red-glow),
+      transparent 65%
+    ),
+    linear-gradient(135deg, var(--ng-white-08), var(--ng-white-02));
+  box-shadow:
+    inset 0 1px 0 var(--ng-white-16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.42),
+    0 18px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* Reflejo especular: una pasada al entrar, no un barrido perpetuo. */
+.ng-glass::after {
+  content: '';
+  position: absolute;
+  inset-block: -80%;
+  left: -70%;
+  width: 45%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transform: rotate(18deg);
+  transition: left 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ng-glass:hover::after,
+.ng-glass:focus-within::after {
+  left: 130%;
+}
+
+.ng-glass.is-hovering {
+  border-color: rgba(255, 30, 55, 0.48);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 -1px rgba(0, 0, 0, 0.4),
+    0 0 35px rgba(255, 0, 35, 0.13),
+    0 20px 70px rgba(0, 0, 0, 0.5);
+}
+
+.ng-glass:focus-visible {
+  outline: 1px solid rgba(255, 70, 90, 0.9);
+  outline-offset: 4px;
+}
+
+/* Onda del clic: capa propia, nunca el pseudo-elemento del reflejo. */
+.ng-ripple {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 20, 50, 0.25) 35%,
+    transparent 70%
+  );
+  animation: ng-ripple 650ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes ng-ripple {
+  from {
+    width: 12px;
+    height: 12px;
+    opacity: 0.9;
+  }
+  to {
+    width: 420px;
+    height: 420px;
+    opacity: 0;
+  }
+}
+
+/* Confirmación del ganador: un pulso, y se apaga. */
+.ng-glass.is-pulsing {
+  animation: ng-pulse 900ms ease;
+}
+
+@keyframes ng-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(255, 0, 35, 0);
+  }
+  45% {
+    box-shadow:
+      0 0 42px var(--ng-red-glow),
+      inset 0 0 22px rgba(255, 0, 35, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ng-glass,
+  .ng-glass::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .ng-ripple,
+  .ng-glass.is-pulsing {
+    animation: none !important;
+    display: none;
+  }
+}
