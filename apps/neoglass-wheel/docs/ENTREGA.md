@@ -1,11 +1,9 @@
 # NeoGlassRojo · Belentani Wheel — entrega
 
-## 1. Veredicto
+**Antes:** rueda funcional en la raíz de un repositorio de 27.699 archivos ajenos, con su CI compitiendo contra el de OmniRoute y sin camino a `main`.
+**Después:** la misma rueda, aislada en `apps/neoglass-wheel/`, enriquecida con el lenguaje visual NeoGlass y verde en `main` recién clonado, sin tocar un archivo de OmniRoute.
 
-**Antes:** una rueda funcional pero en la raíz de un repositorio de 27.699 archivos ajenos, con su CI compitiendo contra el de OmniRoute y sin camino limpio a `main`.
-**Después:** la misma rueda, aislada en `apps/neoglass-wheel/`, enriquecida con el lenguaje visual NeoGlass, verificada de punta a punta y publicada en `main` sin tocar un solo archivo de OmniRoute.
-
-## 2. Cambios
+## 1. Cambios
 
 | Archivo                                  | Qué                                            | Por qué                                                                                       |
 | ---------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -17,7 +15,7 @@
 | `scripts/check-shaders.mjs`              | Marca el binario como ejecutable               | En un clon limpio llega en 0644 y el chequeo fallaba con EACCES                               |
 | `.github/workflows/neoglass-wheel-*.yml` | CI y Pages propios, con `paths`                | El CI raíz habría intentado compilar la rueda con el toolchain de OmniRoute                   |
 
-## 3. Métricas
+## 2. Métricas
 
 | Métrica             | Antes    | Después                              |
 | ------------------- | -------- | ------------------------------------ |
@@ -28,32 +26,11 @@
 | Total gzip          | 19,4 kB  | **20,6 kB** de 120 kB de presupuesto |
 | Verificación        | verde    | **verde**                            |
 
-La cobertura baja 1,5 puntos porque el módulo nuevo entra con 88,4 %: su rama sin DOM es la que no se puede ejercitar en Node. El peso sube 1,2 kB por las capas ópticas, con 99,4 kB de margen intacto.
+Accesibilidad verificada por test: contraste 24/24 ≥ 4,5:1, foco con `outline` propio, teclado completo, `aria-live` para el resultado y `prefers-reduced-motion` que anula toda la animación.
 
-## 4. Cómo verificarlo
+La cobertura baja 1,5 puntos porque el módulo nuevo entra con 88,4 %: su rama sin DOM no se puede ejercitar en Node. El peso sube 1,2 kB por las capas ópticas, con 99,4 kB de margen.
 
-```bash
-cd apps/neoglass-wheel
-npm ci
-npm run verify   # formato → tipos → lint → HTML → GLSL → cobertura → build → presupuesto
-npm run dev      # http://localhost:5173
-```
-
-La verificación es una sola orden y no perdona: cualquier paso en rojo detiene el resto. No se declara nada como verificado sin haberlo ejecutado; las cifras de la tabla anterior salen de esa misma ejecución.
-
-## 5. Accesibilidad y rendimiento
-
-| Comprobación             | Resultado                                                                           |
-| ------------------------ | ----------------------------------------------------------------------------------- |
-| Contraste del texto      | 24/24 colores ≥ 4,5:1                                                               |
-| Foco visible             | `outline` propio, sobrevive al alto contraste                                       |
-| `prefers-reduced-motion` | anula reflejo, onda y pulso                                                         |
-| Navegación por teclado   | Espacio gira; las flechas recorren las opciones y actualizan el resultado sin girar |
-| Anuncio del resultado    | región `aria-live`, sin depender del canvas                                         |
-| Sin WebGL2               | fallback a Canvas 2D con las mismas etiquetas                                       |
-| Presupuesto              | 20,6 kB de 120 kB gzip                                                              |
-
-## 6. Fuentes
+## 3. Fuentes
 
 | Fuente                    | Versión           |
 | ------------------------- | ----------------- |
@@ -64,17 +41,13 @@ La verificación es una sola orden y no perdona: cualquier paso en rojo detiene 
 | glslang (Khronos)         | 11.7.0            |
 | NeoGlass de BELENTANI//OS | Drive, 2026-09-16 |
 
-## 7. Lo que no se encontró
+## 4. Lo que no se encontró
 
-No existe una versión previa completa de la rueda. Drive guarda piezas sueltas
-de septiembre, el «WHEEL» de los resultados es un artefacto de 82–105 B, y
-Notion y Vercel no aportan nada: el proyecto vacío se llama
-`belentani-webgl-engine`. Supabase no pudo auditarse. No se ha inventado nada
-para rellenar ese hueco.
+No existe versión previa completa. Drive guarda piezas sueltas de septiembre, el «WHEEL» de los resultados es un artefacto de 82–105 B, y Vercel solo tiene un proyecto vacío. Supabase no pudo auditarse. No se ha inventado nada para rellenar el hueco.
 
-## 8. Riesgos
+## 5. Riesgos
 
-1. **Licencia.** OmniRoute es MIT de `diegosouzapw`; el material de origen es AGPLv3. Solo se reprodujeron valores de diseño, nunca código. La frontera está en `docs/PROCEDENCIA.md`.
-2. **`main` no comparte historia** con la rama del proyecto: el merge es de linajes no relacionados y deja 27.699 archivos intactos de OmniRoute más la app.
-3. **Supabase sin auditar.** La consulta de tablas agotó el tiempo del pooler; si existe una tabla de la rueda, no se ha visto.
-4. **Pages.** Es un destino por repositorio: activarlo podría sustituir el sitio de OmniRoute. Queda en disparo manual.
+1. **Licencia.** OmniRoute es MIT de `diegosouzapw`; el material de origen es AGPLv3. Solo se reprodujeron valores de diseño, nunca código. Frontera en `docs/PROCEDENCIA.md`.
+2. **`main` sin ancestro común:** el merge es de linajes no relacionados. Deja los 27.699 archivos de OmniRoute intactos y añade la app; no borra nada.
+3. **Supabase sin auditar:** el pooler agotó el tiempo; si existe una tabla de la rueda, no se ha visto.
+4. **Pages:** es un destino por repositorio; activarlo podría sustituir el sitio de OmniRoute. Queda en disparo manual.
