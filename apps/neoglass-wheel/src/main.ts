@@ -5,6 +5,7 @@ import { generateRedPalette, readableInk } from './core/theme.js';
 import type { Segment } from './core/types.js';
 import { MAX_SEGMENTS, normalizeAngle, shortestDelta } from './core/wheel.js';
 import { el, formatClock, formatPercent, mustGet, prefersReducedMotion } from './ui/dom.js';
+import { installNeoGlass, pulseOnce } from './ui/neoglass.js';
 import { WheelController } from './ui/wheel-controller.js';
 
 const STORAGE_KEY = 'neoglassrojo:wheel:v1';
@@ -123,6 +124,11 @@ function initialSegments(): readonly Segment[] {
   const preset = getPreset(presetId) ?? presets[0];
   return presetToSegments(preset);
 }
+
+/* ------------------------------------------------- NeoGlass (capa óptica) */
+// Los controles que reciben la microinteracción se marcan en el HTML con
+// data-ng-glass; aquí solo se instala el motor y se guarda la limpieza.
+const disposeNeoGlass = installNeoGlass(document);
 
 const store = new WheelStore(initialSegments());
 
@@ -308,6 +314,9 @@ function applySegments(
 }
 
 function announceWinner(segment: Segment, index: number, live: boolean): void {
+  // Confirmación óptica del resultado; pulseOnce no hace nada si el sistema
+  // pide menos movimiento, así que no hay que preguntarlo aquí.
+  pulseOnce(dom.resultCard);
   const segments = store.getSnapshot().segments;
   dom.resultValue.textContent = segment.label;
   dom.resultMeta.textContent = `Opción ${index + 1} de ${segments.length} · ${formatPercent(
@@ -504,6 +513,7 @@ Object.defineProperty(globalThis, '__wheel', {
       return plan;
     },
     shortestDelta,
+    disposeNeoGlass,
   },
   writable: false,
 });

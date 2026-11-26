@@ -1,7 +1,12 @@
 /* ============================================================================
    NeoGlassRojo · Belentani Wheel — hoja única, sin frameworks.
    Orden: tokens → reset → primitivas de cristal → layout → componentes → a11y.
+   Las capas --ng-* reproducen el lenguaje visual NeoGlass de BELENTANI//OS
+   (origen acreditado en docs/PROCEDENCIA.md); el código de esta hoja es propio.
    ========================================================================== */
+
+@import './neoglass-tokens.css';
+@import './neoglass-core.css';
 
 /* ---------- 1. Tokens ---------------------------------------------------- */
 :root {

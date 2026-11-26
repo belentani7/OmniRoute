@@ -90,7 +90,7 @@
             <p id="wheel-a11y" class="visually-hidden">
               Rueda de decisiones con las opciones descritas en la lista de opciones.
             </p>
-            <button type="button" class="hub" id="spin" aria-describedby="spin-help">
+            <button type="button" class="hub" id="spin" aria-describedby="spin-help" data-ng-glass>
               <span class="hub__inner">
                 <span class="hub__label" id="spin-label">Girar</span>
                 <span class="hub__kbd" aria-hidden="true">␣</span>
@@ -123,10 +123,22 @@
           <header class="card__head">
             <h2 id="editor-title">Opciones</h2>
             <div class="card__actions">
-              <button type="button" class="btn btn--ghost" id="shuffle" title="Barajar el orden">
+              <button
+                type="button"
+                class="btn btn--ghost"
+                id="shuffle"
+                title="Barajar el orden"
+                data-ng-glass
+              >
                 Barajar
               </button>
-              <button type="button" class="btn btn--ghost" id="reset" title="Restaurar el preset">
+              <button
+                type="button"
+                class="btn btn--ghost"
+                id="reset"
+                title="Restaurar el preset"
+                data-ng-glass
+              >
                 Reiniciar
               </button>
             </div>
@@ -146,7 +158,7 @@
               placeholder="Añade una opción…"
               required
             />
-            <button type="submit" class="btn btn--solid">Añadir</button>
+            <button type="submit" class="btn btn--solid" data-ng-glass>Añadir</button>
           </form>
 
           <p class="form-error" id="form-error" role="alert" hidden></p>
@@ -160,7 +172,9 @@
         <section class="card glass" id="historial" aria-labelledby="history-title">
           <header class="card__head">
             <h2 id="history-title">Historial</h2>
-            <button type="button" class="btn btn--ghost" id="clear-history">Limpiar</button>
+            <button type="button" class="btn btn--ghost" id="clear-history" data-ng-glass>
+              Limpiar
+            </button>
           </header>
           <ol class="history" id="history"></ol>
           <p class="card__empty" id="history-empty">Sin giros todavía.</p>

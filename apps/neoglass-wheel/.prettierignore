@@ -1,0 +1,9 @@
+dist/
+coverage/
+node_modules/
+# La app tiene su propio toolchain y su propio CI: no entra en el árbol del
+# monorepo raíz (lint, formato, tipos). Ver apps/neoglass-wheel/README.md.
+apps/neoglass-wheel/
+
+# Material de referencia descargado de Drive: se inspecciona, no se versiona.
+google_drive/

@@ -1,13 +1,28 @@
-name: CI
+name: NeoGlass Wheels · CI
+
+# Este proyecto vive en apps/neoglass-wheel dentro del monorepo OmniRoute.
+# El nombre del workflow es propio y el disparador lleva `paths` para no
+# encadenarse con el CI de OmniRoute ni consumir minutos en cada push ajeno.
 
 on:
   push:
     branches: ['**']
+    paths:
+      - 'apps/neoglass-wheel/**'
+      - '.github/workflows/neoglass-wheel-ci.yml'
   pull_request:
+    paths:
+      - 'apps/neoglass-wheel/**'
+      - '.github/workflows/neoglass-wheel-ci.yml'
+  workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: neoglass-wheel-ci-${{ github.ref }}
   cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: apps/neoglass-wheel
 
 jobs:
   verify:
@@ -24,6 +39,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
+          cache-dependency-path: apps/neoglass-wheel/package-lock.json
 
       - name: Instalar dependencias
         run: npm ci
@@ -56,6 +72,6 @@ jobs:
         if: matrix.node == '22.x'
         uses: actions/upload-artifact@v4
         with:
-          name: coverage
-          path: coverage/
+          name: neoglass-wheel-coverage
+          path: apps/neoglass-wheel/coverage/
           if-no-files-found: ignore

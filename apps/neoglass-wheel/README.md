@@ -6,8 +6,38 @@
 física de giro verificada, resultados reproducibles por semilla y accesibilidad completa.
 Cero dependencias en tiempo de ejecución, cero peticiones de red, cero cookies.
 
-> Estado: **verde** — 115 tests, typecheck estricto, ESLint sin avisos, shaders compilados
-> con `glslangValidator`, 18,8 KB gzip totales.
+> Estado: **verde** — 126 tests, typecheck estricto, ESLint sin avisos, shaders compilados
+> con `glslangValidator`, 20,6 KB gzip totales.
+
+---
+
+## Dónde vive
+
+Este proyecto es una aplicación independiente dentro de `apps/neoglass-wheel/` del
+monorepo [OmniRoute](../../README.md). Tiene toolchain, tests y CI propios; el pipeline
+raíz no lo compila ni lo formatea, y a la inversa: nada de la rueda toca el código de
+OmniRoute.
+
+```bash
+cd apps/neoglass-wheel
+npm ci && npm run verify
+```
+
+La entrega completa, con métricas antes/después, procedencia del material y riesgos,
+está en [`docs/ENTREGA.md`](./docs/ENTREGA.md).
+
+---
+
+## Capa NeoGlass
+
+La interfaz toma el lenguaje visual de BELENTANI//OS —rojo `#ff0032`, cristal frío,
+radio 18px— y le añade una capa óptica: el halo sigue al puntero, el borde se enciende,
+el clic deja una onda y el ganador confirma con un pulso único.
+
+El material de origen es **AGPLv3** y este repositorio es **MIT**: aquí no hay código
+copiado, sino una reimplementación propia del comportamiento, más un registro de qué se
+tomó y de dónde en [`docs/PROCEDENCIA.md`](./docs/PROCEDENCIA.md). La capa se desactiva
+entera con `prefers-reduced-motion` y no introduce ni una petición de red.
 
 ---
 

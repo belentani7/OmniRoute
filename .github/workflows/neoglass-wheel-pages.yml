@@ -1,8 +1,13 @@
-name: Deploy to GitHub Pages
+name: NeoGlass Wheels · Pages
+
+# Publica únicamente la rueda. `dist` se resuelve dentro de apps/neoglass-wheel
+# y no toca el sitio ni los artefactos que despliegue OmniRoute.
+#
+# AVISO: GitHub Pages es un destino por repositorio. Si OmniRoute ya publica su
+# propio sitio en Pages, activar este workflow sustituiría ese sitio. Por eso
+# queda en `workflow_dispatch` (solo manual) hasta que se decida el destino.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,8 +16,12 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: neoglass-wheel-pages
   cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: apps/neoglass-wheel
 
 jobs:
   build:
@@ -23,12 +32,13 @@ jobs:
         with:
           node-version: '22.x'
           cache: npm
+          cache-dependency-path: apps/neoglass-wheel/package-lock.json
       - run: npm ci
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: apps/neoglass-wheel/dist
 
   deploy:
     needs: build

@@ -10,7 +10,7 @@
  *   node scripts/check-shaders.mjs [--help]
  */
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync, rmSync, existsSync } from 'node:fs';
+import { chmodSync, existsSync, mkdtempSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { wheelFragmentShader, wheelVertexShader } from '../src/ui/shaders.ts';
@@ -42,7 +42,21 @@ if (CANDIDATES.length === 0) {
 }
 
 const validator = CANDIDATES[0];
-const stage = validator.endsWith('.linux') ? '-S' : '-S';
+const stage = '-S';
+
+// El paquete publica el binario sin el bit de ejecución: en un clon limpio
+// `npm ci` lo deja en 0644 y execFileSync falla con EACCES, que aquí se confunde
+// con un error de compilación del shader. Se corrige antes de invocarlo.
+function ensureExecutable(path) {
+  const { mode } = statSync(path);
+  if ((mode & 0o111) === 0) chmodSync(path, 0o755);
+}
+
+try {
+  ensureExecutable(validator);
+} catch (error) {
+  process.stdout.write(`⚠ no se pudo marcar ${validator} como ejecutable: ${error.message}\n`);
+}
 const dir = mkdtempSync(join(tmpdir(), 'neoglassrojo-glsl-'));
 let failures = 0;
 
