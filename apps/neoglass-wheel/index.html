@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es" class="theme-rojo">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>NeoGlassRojo · Belentani Wheel</title>
+    <meta
+      name="description"
+      content="Rueda de decisión NeoGlassRojo: cristal rojo, WebGL2, física de giro verificada, sesgos por peso y accesibilidad completa."
+    />
+    <meta name="theme-color" content="#0b0507" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="./src/styles/main.css" as="style" />
+    <link rel="stylesheet" href="./src/styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#rueda">Saltar a la rueda</a>
+
+    <div class="aurora" aria-hidden="true">
+      <span class="aurora__blob aurora__blob--a"></span>
+      <span class="aurora__blob aurora__blob--b"></span>
+      <span class="aurora__blob aurora__blob--c"></span>
+      <span class="aurora__grain"></span>
+    </div>
+
+    <header class="topbar glass">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="markGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ff6b73" />
+                <stop offset="0.55" stop-color="#e0113f" />
+                <stop offset="1" stop-color="#6d0518" />
+              </linearGradient>
+            </defs>
+            <circle cx="16" cy="16" r="13" fill="none" stroke="url(#markGrad)" stroke-width="2.5" />
+            <path d="M16 16 L16 3 A13 13 0 0 1 27.3 9.5 Z" fill="url(#markGrad)" opacity="0.92" />
+            <circle cx="16" cy="16" r="3.4" fill="#fff1f2" />
+          </svg>
+        </span>
+        <span class="brand__text">
+          <strong>NeoGlassRojo</strong>
+          <em>Belentani Wheel</em>
+        </span>
+      </div>
+
+      <nav class="topbar__nav" aria-label="Secciones">
+        <a href="#rueda">Rueda</a>
+        <a href="#editor">Opciones</a>
+        <a href="#historial">Historial</a>
+      </nav>
+
+      <div class="topbar__status" role="status" aria-live="off">
+        <span class="pill" id="renderer-pill" title="Motor de render activo">motor</span>
+        <span class="pill pill--ghost" id="fps-pill" title="Fotogramas por segundo durante el giro"
+          >60 fps</span
+        >
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="stage" id="rueda" aria-labelledby="stage-title">
+        <div class="stage__head">
+          <h1 id="stage-title">Gira y decide</h1>
+          <p class="stage__sub" id="preset-hint">Seis antojos, una decisión. Sin empates.</p>
+        </div>
+
+        <div class="wheel-wrap">
+          <div class="wheel-pointer" aria-hidden="true">
+            <svg viewBox="0 0 32 44" focusable="false">
+              <defs>
+                <linearGradient id="pointerGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#fff4f5" />
+                  <stop offset="1" stop-color="#ff3b30" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M16 42 L2.5 12 A14 14 0 1 1 29.5 12 Z"
+                fill="url(#pointerGrad)"
+                stroke="rgba(11,5,7,0.55)"
+                stroke-width="1.5"
+              />
+            </svg>
+          </div>
+
+          <div class="wheel-glass" id="wheel-glass">
+            <canvas id="wheel" role="img" aria-labelledby="wheel-a11y"></canvas>
+            <p id="wheel-a11y" class="visually-hidden">
+              Rueda de decisiones con las opciones descritas en la lista de opciones.
+            </p>
+            <button type="button" class="hub" id="spin" aria-describedby="spin-help" data-ng-glass>
+              <span class="hub__inner">
+                <span class="hub__label" id="spin-label">Girar</span>
+                <span class="hub__kbd" aria-hidden="true">␣</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <p id="spin-help" class="stage__help">
+          Pulsa <kbd>Espacio</kbd> para girar. Con <kbd>←</kbd>/<kbd>→</kbd> recorres las opciones.
+        </p>
+
+        <div
+          class="result"
+          id="result-card"
+          data-state="idle"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <span class="result__eyebrow">Resultado</span>
+          <strong class="result__value" id="result-value">—</strong>
+          <span class="result__meta" id="result-meta">La rueda aún no ha hablado.</span>
+        </div>
+
+        <ul class="legend" id="legend" aria-label="Probabilidades por opción"></ul>
+      </section>
+
+      <aside class="panel" aria-label="Configuración">
+        <section class="card glass" id="editor" aria-labelledby="editor-title">
+          <header class="card__head">
+            <h2 id="editor-title">Opciones</h2>
+            <div class="card__actions">
+              <button
+                type="button"
+                class="btn btn--ghost"
+                id="shuffle"
+                title="Barajar el orden"
+                data-ng-glass
+              >
+                Barajar
+              </button>
+              <button
+                type="button"
+                class="btn btn--ghost"
+                id="reset"
+                title="Restaurar el preset"
+                data-ng-glass
+              >
+                Reiniciar
+              </button>
+            </div>
+          </header>
+
+          <div class="presets" role="group" aria-label="Presets">
+            <!-- Se rellena desde app.ts -->
+          </div>
+
+          <form class="adder" id="adder" autocomplete="off">
+            <label class="visually-hidden" for="new-label">Nueva opción</label>
+            <input
+              id="new-label"
+              name="label"
+              type="text"
+              maxlength="22"
+              placeholder="Añade una opción…"
+              required
+            />
+            <button type="submit" class="btn btn--solid" data-ng-glass>Añadir</button>
+          </form>
+
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+
+          <ol class="options" id="options"></ol>
+          <p class="card__foot">
+            Peso = probabilidad relativa. <span id="weight-sum">Σ 1.00</span>
+          </p>
+        </section>
+
+        <section class="card glass" id="historial" aria-labelledby="history-title">
+          <header class="card__head">
+            <h2 id="history-title">Historial</h2>
+            <button type="button" class="btn btn--ghost" id="clear-history" data-ng-glass>
+              Limpiar
+            </button>
+          </header>
+          <ol class="history" id="history"></ol>
+          <p class="card__empty" id="history-empty">Sin giros todavía.</p>
+        </section>
+
+        <section class="card glass facts" aria-labelledby="facts-title">
+          <header class="card__head">
+            <h2 id="facts-title">Bajo el cristal</h2>
+          </header>
+          <dl class="facts__grid">
+            <div>
+              <dt>Render</dt>
+              <dd id="fact-renderer">—</dd>
+            </div>
+            <div>
+              <dt>Sectores</dt>
+              <dd id="fact-count">—</dd>
+            </div>
+            <div>
+              <dt>Ángulo</dt>
+              <dd id="fact-angle">—</dd>
+            </div>
+            <div>
+              <dt>Semilla</dt>
+              <dd id="fact-seed">—</dd>
+            </div>
+          </dl>
+          <p class="facts__note">
+            Cada giro es reproducible: la semilla viaja en la URL y el resultado se puede auditar.
+          </p>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <span>NeoGlassRojo · Belentani Wheel</span>
+      <span class="footer__dot" aria-hidden="true">·</span>
+      <span>WebGL2 con degradación a Canvas 2D</span>
+      <span class="footer__dot" aria-hidden="true">·</span>
+      <span>Sin cookies, sin red, sin dependencias</span>
+    </footer>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+/* ============================================================================
+   NeoGlassRojo — tokens de identidad.
+
+   Valores de diseño tomados de la identidad NeoGlass de BELENTANI//OS
+   (capa roja, 2026-09-03). Un token es un dato de diseño, no una porción de
+   código: se reproduce el valor para mantener coherencia de marca y se acredita
+   el origen en docs/PROCEDENCIA.md. Los nombres --ng-* son el vocabulario
+   público de esa identidad y se conservan para que cualquier pieza futura del
+   ecosistema encaje sin traducción.
+   ========================================================================== */
+
+:root {
+  /* Superficies */
+  --ng-bg: #050508;
+  --ng-panel: #0d0d14;
+
+  /* Rojo de marca y sus derivados */
+  --ng-red: #ff0032;
+  --ng-red-hi: #ff2244;
+  --ng-red-deep: #8b0000;
+  --ng-red-glow: rgba(255, 0, 35, 0.32);
+
+  /* Cristal: tres intensidades de blanco y una línea de borde */
+  --ng-white-16: rgba(255, 255, 255, 0.16);
+  --ng-white-08: rgba(255, 255, 255, 0.085);
+  --ng-white-02: rgba(255, 255, 255, 0.018);
+  --ng-line: rgba(255, 255, 255, 0.115);
+
+  /* Texto */
+  --ng-text: #f4f4f6;
+  --ng-muted: rgba(255, 255, 255, 0.55);
+
+  /* Forma y tipografía */
+  --ng-glass: blur(24px) saturate(155%);
+  --ng-radius: 18px;
+  --ng-pill: 99px;
+  --ng-font-display: 'Sora', system-ui, sans-serif;
+  --ng-font-body: 'Inter', system-ui, sans-serif;
+  --ng-font-mono: 'JetBrains Mono', monospace;
+}

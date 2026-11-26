@@ -304,3 +304,10 @@ docker-compose.yml.bak
 
 # Scoped tsc incremental state written by the typecheck gates (typecheck:core / open-sse / api)
 .tsbuildinfo-*
+
+# NeoGlass Wheels (apps/neoglass-wheel): artefactos locales propios.
+# Los patrones /dist/ y /coverage/ de OmniRoute están anclados a la raíz, así
+# que las salidas dentro de apps/ necesitan su propia regla.
+apps/neoglass-wheel/dist/
+apps/neoglass-wheel/coverage/
+.vite/
