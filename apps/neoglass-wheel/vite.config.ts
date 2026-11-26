@@ -9,6 +9,14 @@ export default defineConfig({
     // El preview de Arena llega con un Host *.e2b.app: no lo bloqueamos.
     allowedHosts: true,
   },
+  css: {
+    // Sin esto, Vite sube por el árbol de directorios y encuentra el
+    // `postcss.config.mjs` de OmniRoute (Tailwind), que no está instalado en
+    // esta app: el build falla con "Cannot find module '@tailwindcss/postcss'".
+    // La rueda no usa PostCSS, así que se declara la cadena vacía y se corta
+    // la herencia del monorepo.
+    postcss: { plugins: [] },
+  },
   preview: {
     host: '0.0.0.0',
     port: 4173,
